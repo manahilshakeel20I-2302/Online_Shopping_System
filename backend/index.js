@@ -2,17 +2,27 @@ const express = require ('express')
 
 const bodyParser = require ('body-parser')
 
+require("dotenv").config();
+
 const path = require('path')
 
 const stripe = require('stripe')(process.env.SECRET_KEY)
 
 const mongoose = require('mongoose')
 
+
+const Routes = require('./routes/userRoutes')
+
 const app = express()
 
 app.use(bodyParser.urlencoded({extended:false}))
 
 app.use(bodyParser.json())
+
+
+app.use("/user", Routes)
+
+
 
 
 const PORT = process.env.PORT || 3000
@@ -31,3 +41,6 @@ mongoose.connect(process.env.MONGO_URL).then(()=>{
 }).catch(err=>{
     console.log(err)
 })
+
+
+

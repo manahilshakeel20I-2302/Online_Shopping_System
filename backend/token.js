@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 let DecodeUser = (req,res,next)=>{
     let token = req.headers['token']
-    jwt.verify(token, process.env.SECRET_KEY ,(err , decoded)=>{
+    jwt.verify(token, process.env.SECRET ,(err , decoded)=>{
        if(!err){
         req.decoded = decoded;
         next();
@@ -20,7 +20,7 @@ let checkUser = (req,res,next)=>{
 }
 
 let checkSuperAdmin = (req,res,next)=>{
-    if(req.decoded.role=='super admin'){
+    if(req.decoded.role=="admin"){
         next()
     }else
     res.status(403).send({"Message":"You are not an super admin"})

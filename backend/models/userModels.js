@@ -21,15 +21,17 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     address: {
-      type: {},
+      type: String,
       required: true,
     },
     role: {
-      type: Number,
-      default: 0,
+      type: String,
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("users", userSchema);
+
+const userModel = mongoose.model('users', userSchema);
+
+module.exports = userModel;

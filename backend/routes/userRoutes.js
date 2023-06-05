@@ -1,20 +1,17 @@
-const {makePayment, signup, login, update,deleteUser } = require ('../models/userModel')
+const { makePayment,signup, login, updateUser ,deleteUser } = require ("../controllers/userControllers")
 
 const {DecodeUser, checkSuperAdmin, checkUser} = require('../token')
 
 const userRoutes = require("express").Router();
 
-userRoutes.post("/payments", DecodeUser, makePayment)
+userRoutes.post("/payments",  makePayment)
+ 
+     userRoutes.post("/signup" , signup)
 
-userRoutes.post("/signup" , signup)
+     userRoutes.patch("/updateUser/:id" , DecodeUser, checkSuperAdmin, updateUser )
 
-userRoutes.patch("/updateUser/:id" , DecodeUser , checkSuperAdmin, update )
+     userRoutes.delete("/deleteUser/:id" ,DecodeUser,checkSuperAdmin ,deleteUser )
 
-userRoutes.patch("/deleteUser/:id" , DecodeUser , checkSuperAdmin ,deleteUser )
+     userRoutes.get("/login"  ,login)
 
-
-userRoutes.get("/login" , DecodeUser ,login)
-
-module.exports={
-    userRoutes
-}
+module.exports = userRoutes;
