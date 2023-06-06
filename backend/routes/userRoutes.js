@@ -1,10 +1,9 @@
-const { makePayment,signup, login, updateUser ,deleteUser, forgetPassword, resetPassword } = require ("../controllers/userControllers")
+const { signup, login, updateUser ,deleteUser, forgetPassword, resetPassword, displayUsers } = require ("../controllers/userControllers")
 
 const {DecodeUser, checkSuperAdmin, checkUser} = require('../token')
 
 const userRoutes = require("express").Router();
 
-userRoutes.post("/payments",  makePayment)
  
      userRoutes.post("/signup" , signup)
 
@@ -17,5 +16,7 @@ userRoutes.post("/payments",  makePayment)
      userRoutes.post("/forgetPassword", forgetPassword)
 
      userRoutes.get("/resetPassword", resetPassword)
+
+     userRoutes.get("/displayAllUsers", DecodeUser, checkSuperAdmin, displayUsers)
 
 module.exports = userRoutes;

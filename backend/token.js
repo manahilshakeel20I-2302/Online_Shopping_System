@@ -20,7 +20,7 @@ let checkUser = (req,res,next)=>{
 }
 
 let checkSuperAdmin = (req,res,next)=>{
-    if(req.decoded.role=="admin"){
+    if(req.decoded.role=="super admin"){
         next()
     }else
     res.status(403).send({"Message":"You are not an super admin"})

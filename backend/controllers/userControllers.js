@@ -33,6 +33,17 @@ let signup = (req , res)=>{
     })
 
 }
+
+let displayUsers = (req, res)=>{
+    userModel.find({}, (err, result) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(result);
+      }
+    });
+  
+}
 let login =(req,res)=>{ 
     let {email, password}=req.body;
  
@@ -155,55 +166,8 @@ let resetPassword = async(req,res)=>{
     res.status(400).send({success:fasle, msg:error})
   }
 }
-let makePayment = (req, res)=>{
-    const userEmail = req.body.stripeEmail;
-
-  userModel.findOne({ email: userEmail })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send('User not found');
-      }
-       const customerDetails = {
-        email: userEmail,
-        source: req.body.stripeToken,
-        name: user.name,
-        address: {
-          line1: user.address.line1,
-          postal_code: user.address.postal_code,
-          city: user.address.city,
-          state: user.address.state,
-          country: user.address.country,
-        },
-      };
-
-      stripe.customers.create(customerDetails)
-        .then((customer) => {
-          const chargeDetails = {
-            amount: 7000,
-            description: 'Web product',
-            currency: 'USD',
-            customer: customer.id,
-          };
-
-          stripe.charges.create(chargeDetails)
-            .then((charge) => {
-              console.log(charge);
-              res.send('Success');
-            })
-            .catch((err) => {
-              res.send(err);
-            });
-        })
-        .catch((err) => {
-          res.send(err);
-        });
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-}
 
 
 module.exports={
-  makePayment, signup, login, updateUser, deleteUser, forgetPassword, resetPassword
+  signup, login, updateUser, deleteUser, forgetPassword, resetPassword, displayUsers
 }
