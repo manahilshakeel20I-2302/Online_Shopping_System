@@ -91,27 +91,6 @@ let updateUser = async (req, res) =>{
           refreshToken: process.env.OAUTH_REFRESH_TOKEN
         }
       });
-      // const transporter = nodemailer.createTransport({
-      //   host:'smtp.gmail.com',
-      //   port:587,
-      //   secure:false,
-      //   requireTLS: true,
-      //   auth:{
-      //     user:'i202302@nu.edu.pk',
-      //     password: 'mateen1013'
-      //   }
-      //   // tls: {
-          
-      //   //   minVersion: 'TLSv1.2'
-      //   // }
-      // })
-      // const mailOptions = {
-      //   from: 'i202302@nu.edu.pk',
-      //   to: email,
-      //   subject: 'Reset Password',
-      //   html: '<p> Hello'+name+'<a href="http://localhost:3000/user/resetPassword?token='+token+'">Click this link to reset your password. Thank You!'
-        
-      // }
       let mailOptions = {
         from: process.env.MAIL_USERNAME,
         to: email,
@@ -128,13 +107,6 @@ let updateUser = async (req, res) =>{
           console.log("Mail has been sent to you", info.response)
         }
       })
-      // transporter.verify(function (error, success) {
-      //   if (error) {
-      //     console.log(error);
-      //   } else {
-      //     console.log("Server is ready to take our messages");
-      //   }
-      // });
     }
     catch(error){
       res.status(400).send({msg:error.message})
