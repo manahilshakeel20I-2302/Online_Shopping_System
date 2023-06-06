@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     phone: {
-      type: String,
+      type: Number,
       required: true,
     },
     address: {
@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
     },
+    token:{
+      type:String,
+      default:''
+    }
   },
   { timestamps: true }
 );

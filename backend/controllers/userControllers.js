@@ -6,6 +6,10 @@ require("dotenv").config();
 
 const jwt = require('jsonwebtoken')
 
+const randomstring = require('randomstring')
+
+const nodemailer = require('nodemailer')
+
 const stripe = require('stripe')(process.env.SECRET_KEY)
 
 let signup = (req , res)=>{
@@ -73,6 +77,112 @@ let updateUser = async (req, res) =>{
     const User = await userModel.findByIdAndUpdate({ _id: id }, req.body, { new: true });
       res.status(200).send({"Message":"User updated successfully!"}).json(User)
     }
+
+  let sendResetMail = async(name, email, token)=>{
+    try{
+      let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          type: 'OAuth2',
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.MAIL_PASSWORD,
+          clientId: process.env.OAUTH_CLIENTID,
+          clientSecret: process.env.OAUTH_CLIENT_SECRET,
+          refreshToken: process.env.OAUTH_REFRESH_TOKEN
+        }
+      });
+      // const transporter = nodemailer.createTransport({
+      //   host:'smtp.gmail.com',
+      //   port:587,
+      //   secure:false,
+      //   requireTLS: true,
+      //   auth:{
+      //     user:'i202302@nu.edu.pk',
+      //     password: 'mateen1013'
+      //   }
+      //   // tls: {
+          
+      //   //   minVersion: 'TLSv1.2'
+      //   // }
+      // })
+      // const mailOptions = {
+      //   from: 'i202302@nu.edu.pk',
+      //   to: email,
+      //   subject: 'Reset Password',
+      //   html: '<p> Hello'+name+'<a href="http://localhost:3000/user/resetPassword?token='+token+'">Click this link to reset your password. Thank You!'
+        
+      // }
+      let mailOptions = {
+        from: process.env.MAIL_USERNAME,
+        to: email,
+        subject: 'Reset Password',
+        html: '<p> Hello'+name+'<a href="http://localhost:3000/user/resetPassword?token='+token+'">Click this link to reset your password. Thank You!'
+
+      };
+      transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+          console.log(error)
+
+        }
+        else{
+          console.log("Mail has been sent to you", info.response)
+        }
+      })
+      // transporter.verify(function (error, success) {
+      //   if (error) {
+      //     console.log(error);
+      //   } else {
+      //     console.log("Server is ready to take our messages");
+      //   }
+      // });
+    }
+    catch(error){
+      res.status(400).send({msg:error.message})
+      console.log(error)
+
+    }
+  }
+
+let forgetPassword = async(req,res)=>{
+  try{
+      const email = req.body.email 
+      const userData = await userModel.findOne({email:email})
+      if(userData){
+        const rand= randomstring.generate()
+        await userModel.updateOne({email:email}, {$set:{token:rand}})
+        sendResetMail(userData.name, userData.email, rand);
+        res.status(200).send({"Message":"We have sent you an email, follow ths instructios to reset your password!"})
+
+      }
+      else{
+        res.status(400).json({error: 'This email does not exists!'})
+      }
+       
+  }
+  catch(error){
+      res.status(400).json({error: error.msg})
+      console.log(error)
+  }
+}
+
+let resetPassword = async(req,res)=>{
+  try{
+    const token = req.query.token
+    const tokenData = await userModel.findOne({token:token})
+    if(tokenData){
+       const password =  req.body.password;
+       const userData = await userModel.findByIdAndUpdate({_id:tokenData._id},{$set:{password:password, token:''}}, {new:true})
+       res.status(400).send({success:true, msg:"Your Password has been reset!", data:userData})
+    }
+    else{
+      res.status(400).send({success:true, msg:"This Link has been expired!"})
+    }
+
+  }
+  catch(error){
+    res.status(400).send({success:fasle, msg:error})
+  }
+}
 let makePayment = (req, res)=>{
     const userEmail = req.body.stripeEmail;
 
@@ -123,5 +233,5 @@ let makePayment = (req, res)=>{
 
 
 module.exports={
-  makePayment, signup, login, updateUser, deleteUser
+  makePayment, signup, login, updateUser, deleteUser, forgetPassword, resetPassword
 }
