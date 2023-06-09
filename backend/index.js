@@ -4,6 +4,8 @@ const bodyParser = require ('body-parser')
 
 require("dotenv").config();
 
+const cors = require('cors');
+
 const path = require('path')
 
 const stripe = require('stripe')(process.env.SECRET_KEY)
@@ -16,6 +18,8 @@ const userRoutes = require('./routes/userRoutes')
 const paymentRoutes = require('./routes/paymentRoutes')
 
 const app = express()
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({extended:false}))
 

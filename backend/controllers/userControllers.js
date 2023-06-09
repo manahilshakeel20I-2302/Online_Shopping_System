@@ -45,9 +45,9 @@ let displayUsers = (req, res)=>{
   
 }
 let login =(req,res)=>{ 
-    let {email, password}=req.body;
- 
- userModel.findOne({email:email}).then(founduser=>{
+    let {Email, password}=req.body;
+ console.log(Email,password)
+ userModel.findOne({email:Email}).then(founduser=>{
      if(!founduser){
          res.status(404).send({"Message":"user not found"});
      }
@@ -106,7 +106,7 @@ let updateUser = async (req, res) =>{
         from: process.env.MAIL_USERNAME,
         to: email,
         subject: 'Reset Password',
-        html: '<p> Hello'+name+'<a href="http://localhost:3000/user/resetPassword?token='+token+'">Click this link to reset your password. Thank You!'
+        html: '<p> Hello ' +name+' <a href="http://localhost:3001/user/resetPassword?token='+token+'" >Click this link to reset your password. Thank You!'
 
       };
       transporter.sendMail(mailOptions, function(error, info){

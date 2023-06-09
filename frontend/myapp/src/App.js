@@ -1,29 +1,24 @@
 
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './components/loginRegsiterform'
-
+import Login from './components/Login'
+import Navbar from './components/Navbar'
+import {Route, Routes} from 'react-router-dom'
 
 function App() {
   return (
+    <>
     <div className="App">
-      <BrowserRouter>
+    <Navbar/>
       <Routes>
         <Route
-              path="/user/login</Route>" 
-              element={<Login />} 
-
+          path ="/"
+          element = {<Login/>}
         />
       </Routes>
-      
-      
-      
-      </BrowserRouter>
-  
-
-
-
+     
+     
     </div>
+    </>
   );
 }
 

@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
       default:''
     }
   },
-  { timestamps: true }  // mongodb+srv://manahilmano2002:matii1013@cluster0.nconi13.mongodb.net/
+  { timestamps: true }  
 );
 
 

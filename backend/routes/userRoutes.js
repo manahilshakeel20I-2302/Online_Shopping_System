@@ -11,7 +11,7 @@ const userRoutes = require("express").Router();
 
      userRoutes.delete("/deleteUser/:id" ,DecodeUser,checkSuperAdmin ,deleteUser )
 
-     userRoutes.get("/login"  ,login)
+     userRoutes.post("/login"  ,login)
 
      userRoutes.post("/forgetPassword", forgetPassword)
 
